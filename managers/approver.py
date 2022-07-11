@@ -16,4 +16,3 @@ class ApproverManager:
         if check_password_hash(approver.password, data["password"]):
             return AuthManager.encode_token(approver)
         raise BadRequest("Invalid credentials")
-
