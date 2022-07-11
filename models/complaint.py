@@ -5,6 +5,8 @@ from models.enums import ComplaintState
 
 
 class ComplaintModel(db.Model):
+    __tablename__ = 'complaint'
+
     id = db.Column(db.Integer, primary_key=True)
     photo_url = db.Column(db.String(255), nullable=False)
     title = db.Column(db.String(100), nullable=False)
