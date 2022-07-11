@@ -4,7 +4,7 @@ from db import db
 from models.enums import ComplaintState
 
 
-class Complaint(db.Model):
+class ComplaintModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     photo_url = db.Column(db.String(255), nullable=False)
     title = db.Column(db.String(100), nullable=False)
