@@ -11,6 +11,7 @@ class BaseUserModel(db.Model):
     email = db.Column(db.String(60), nullable=False, unique=True)
     phone = db.Column(db.String(14), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    iban = db.Column(db.String(22), nullable=False)
 
 
 class ComplainerModel(BaseUserModel):

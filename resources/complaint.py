@@ -1,4 +1,5 @@
 from flask import request
+from flask_api import status
 from flask_restful import Resource
 
 from managers.auth import auth
@@ -23,7 +24,7 @@ class ComplaintsResource(Resource):
         data = request.get_json()
         current_user = auth.current_user()
         new_complaint = ComplaintManager.create(data, current_user)
-        return ComplaintSchemaResponse().dump(new_complaint) , 201
+        return ComplaintSchemaResponse().dump(new_complaint) , status.HTTP_201_CREATED
 
 
 class ApproveComplaintResource(Resource):
@@ -31,7 +32,7 @@ class ApproveComplaintResource(Resource):
     @permission_required(UserRole.approver)
     def put(self, id):
         ComplaintManager.approve(id)
-        return 204
+        return status.HTTP_204_NO_CONTENT
 
 
 class RejectComplaintResource(Resource):
@@ -39,5 +40,5 @@ class RejectComplaintResource(Resource):
     @permission_required(UserRole.approver)
     def put(self, id):
         ComplaintManager.reject(id)
-        return 204
+        return status.HTTP_204_NO_CONTENT
 
