@@ -1,10 +1,15 @@
+import os
 import uuid
 
+from constants.common import TEMP_DIR
 from db import db
 from models import ComplaintModel, UserRole, ComplaintState, TransactionModel
+from services.s3 import S3Service
 from services.wise import WiseService
+from utils.common import decode_file
 
 wise = WiseService()
+
 
 class ComplaintManager:
     @staticmethod
@@ -13,15 +18,29 @@ class ComplaintManager:
             return ComplaintModel.query.filter_by(complainer_id=user.id).all()
         return ComplaintModel.query.all()
 
+
     @staticmethod
     def create(data, user):
         data["complainer_id"] = user.id
-        complaint = ComplaintModel(**data)
-        db.session.add(complaint)
-        db.session.flush()
-        # TODO resolve the .commit() problem, explain flush
-        ComplaintManager.issue_transaction(data["amount"], f"{user.first_name} {user.last_name}", user.iban, complaint.id)
-        return complaint
+        extension = data.pop("extension")
+        photo = data.pop("photo")
+        file_name = f"{str(uuid.uuid4())}.{extension}"
+        path = os.path.join(TEMP_DIR, file_name)
+        decode_file(path, photo)
+        s3 = S3Service()
+        photo_url = s3.upload_photo(path, file_name)
+
+        try:
+            data["photo_url"] = photo_url
+            complaint = ComplaintModel(**data)
+            db.session.add(complaint)
+            db.session.flush()
+            ComplaintManager.issue_transaction(data["amount"], f"{user.first_name} {user.last_name}", user.iban, complaint.id)
+            return complaint
+        except Exception:
+            s3.delete_photo(file_name)
+        finally:
+            os.remove(path)
 
     @staticmethod
     def approve(complaint_id):

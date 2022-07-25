@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api
 
@@ -9,6 +10,7 @@ app = Flask(__name__)
 db.init_app(app)
 app.config.from_object("config.DevelopmentConfig")
 migrate = Migrate(app, db)
+CORS(app)
 api = Api(app)
 
 

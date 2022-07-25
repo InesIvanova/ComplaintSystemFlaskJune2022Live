@@ -9,5 +9,6 @@ class ComplaintSchemaResponse(ComplaintBase):
     id = fields.Int(required=True)
     created_on = fields.DateTime(required=True)
     status = EnumField(ComplaintState, by_value=True)
+    photo_url = fields.String(required=True)
     # TODO make nested schema for complainer obj
     # complainer = fields.Nested()

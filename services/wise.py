@@ -1,5 +1,4 @@
 import requests
-import uuid
 from decouple import config
 
 

@@ -2,7 +2,7 @@ from werkzeug.exceptions import BadRequest
 
 from db import db
 from managers.auth import AuthManager
-from models.user import ComplainerModel
+from models.user import ComplainerModel, ApproverModel
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
