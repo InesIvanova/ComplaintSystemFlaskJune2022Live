@@ -65,4 +65,3 @@ class WiseService:
 if __name__ == "__main__":
     wise = WiseService()
 
-    print(wise.fund_transfer(transfer_id))

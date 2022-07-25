@@ -31,6 +31,9 @@ class ComplaintManager:
 
     @staticmethod
     def reject(complaint_id):
+        transaction = TransactionModel.query.filter_by(complaint_id=complaint_id).first()
+        # Here cancel the transfer
+        # wise.fund_transfer(transaction.transfer_id)
         ComplaintModel.query.filter_by(id=complaint_id).update({"status": ComplaintState.rejected})
 
     @staticmethod

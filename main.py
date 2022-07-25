@@ -8,8 +8,8 @@ from resources.routes import routes
 app = Flask(__name__)
 db.init_app(app)
 app.config.from_object("config.DevelopmentConfig")
-api = Api(app)
 migrate = Migrate(app, db)
+api = Api(app)
 
 
 @app.after_request
