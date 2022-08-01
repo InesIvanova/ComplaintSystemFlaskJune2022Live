@@ -28,8 +28,8 @@ class ComplaintsResource(Resource):
 
 
 class ApproveComplaintResource(Resource):
-    # @auth.login_required
-    # @permission_required(UserRole.approver)
+    @auth.login_required
+    @permission_required(UserRole.approver)
     def put(self, id):
         ComplaintManager.approve(id)
         return status.HTTP_204_NO_CONTENT
