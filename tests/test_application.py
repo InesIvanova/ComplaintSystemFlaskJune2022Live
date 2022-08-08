@@ -78,5 +78,23 @@ class TestApp(TestCase):
             self.assert403(resp)
             self.assertEqual(resp.json, {'message': 'Permission denied!'})
 
+    def test_register_schema_raises_invalid_first_name(self):
+        data = {"last_name": "Test", "email": "test@test.com", "iban": "aaaaaaaaaaaaaaaaaaaaaa", "phone": "11111111111111", "password": "12345@assd1"}
+        headers = {"Content-Type": "application/json"}
+        url = "/register"
 
-    # TODO TEST TOKEN IS EXPIRED USING @patch() and patching datetime.utcnow()
+        # Missing name
+        resp = self.client.post(url, headers=headers, json=data)
+        self.assert400(resp)
+        assert resp.json == {'message': {'first_name': ['Missing data for required field.']}}
+
+        data["first_name"] = "A"
+        resp = self.client.post(url, headers=headers, json=data)
+        self.assert400(resp)
+        assert resp.json == {'message': {'first_name': ['Length must be between 2 and 20.']}}
+
+        data["first_name"] = "AAAAAAAAAAAAAAAAAAAAAAA"
+        resp = self.client.post(url, headers=headers, json=data)
+        self.assert400(resp)
+        assert resp.json == {'message': {'first_name': ['Length must be between 2 and 20.']}}
+
